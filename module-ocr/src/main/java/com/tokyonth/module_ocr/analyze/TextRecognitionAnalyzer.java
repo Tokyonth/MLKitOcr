@@ -36,7 +36,7 @@ import com.tokyonth.module_core.util.LogUtils;
  */
 public class TextRecognitionAnalyzer implements Analyzer<Text> {
 
-    private TextRecognizer mTextRecognizer;
+    private final TextRecognizer mTextRecognizer;
 
     public TextRecognitionAnalyzer() {
         this(null);
@@ -54,14 +54,11 @@ public class TextRecognitionAnalyzer implements Analyzer<Text> {
     public void analyze(@NonNull ImageProxy imageProxy, @NonNull OnAnalyzeListener<AnalyzeResult<Text>> listener) {
         try {
             final Bitmap bitmap = BitmapUtils.getBitmap(imageProxy);
+            assert bitmap != null;
             InputImage inputImage = InputImage.fromBitmap(bitmap, 0);
-            mTextRecognizer.process(inputImage).addOnSuccessListener(result -> {
-                if (result != null) {
-                    listener.onSuccess(new AnalyzeResult<>(bitmap, result));
-                } else {
-                    listener.onFailure();
-                }
-            }).addOnFailureListener(e -> listener.onFailure());
+            mTextRecognizer.process(inputImage)
+                    .addOnSuccessListener(result -> listener.onSuccess(new AnalyzeResult<>(bitmap, result)))
+                    .addOnFailureListener(e -> listener.onFailure());
         } catch (Exception e) {
             LogUtils.w(e);
         }

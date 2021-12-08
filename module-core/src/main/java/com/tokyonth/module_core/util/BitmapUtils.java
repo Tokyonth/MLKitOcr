@@ -20,7 +20,6 @@ import java.nio.ByteBuffer;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.camera.core.ExperimentalGetImage;
 import androidx.camera.core.ImageProxy;
 
 public class BitmapUtils {
