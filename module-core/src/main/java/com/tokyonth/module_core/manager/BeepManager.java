@@ -22,7 +22,6 @@ import android.media.MediaPlayer;
 import android.os.Vibrator;
 
 import com.tokyonth.module_core.R;
-import com.tokyonth.module_core.util.LogUtils;
 
 import java.io.Closeable;
 
@@ -45,11 +44,11 @@ public final class BeepManager implements MediaPlayer.OnErrorListener, Closeable
         updatePrefs();
     }
 
-    public void setVibrate(boolean vibrate){
+    public void setVibrate(boolean vibrate) {
         this.vibrate = vibrate;
     }
 
-    public void setPlayBeep(boolean playBeep){
+    public void setPlayBeep(boolean playBeep) {
         this.playBeep = playBeep;
     }
 
@@ -57,8 +56,8 @@ public final class BeepManager implements MediaPlayer.OnErrorListener, Closeable
         if (mediaPlayer == null) {
             mediaPlayer = buildMediaPlayer(context);
         }
-        if(vibrator == null){
-            vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
+        if (vibrator == null) {
+            vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         }
     }
 
@@ -82,7 +81,6 @@ public final class BeepManager implements MediaPlayer.OnErrorListener, Closeable
             mediaPlayer.prepare();
             return mediaPlayer;
         } catch (Exception e) {
-            LogUtils.w(e);
             mediaPlayer.release();
             return null;
         }
@@ -97,13 +95,13 @@ public final class BeepManager implements MediaPlayer.OnErrorListener, Closeable
 
     @Override
     public synchronized void close() {
-        try{
+        try {
             if (mediaPlayer != null) {
                 mediaPlayer.release();
                 mediaPlayer = null;
             }
-        }catch (Exception e){
-            LogUtils.e(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

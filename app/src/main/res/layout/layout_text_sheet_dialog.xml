@@ -7,7 +7,7 @@
     <View
         android:id="@+id/view_tag"
         android:layout_width="40dp"
-        android:layout_height="8dp"
+        android:layout_height="4dp"
         android:layout_margin="16dp"
         android:background="@drawable/tag_dialog_ocr_round"
         app:layout_constraintEnd_toEndOf="parent"

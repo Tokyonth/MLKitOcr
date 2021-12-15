@@ -15,6 +15,8 @@
  */
 package com.tokyonth.module_core.analyze;
 
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
 import androidx.camera.core.ImageProxy;
 
@@ -26,13 +28,17 @@ import com.tokyonth.module_core.AnalyzeResult;
 public interface Analyzer<T> {
     /**
      * Analyzes an image to produce a result.
+     *
      * @param imageProxy The image to analyze
      */
     void analyze(@NonNull ImageProxy imageProxy, @NonNull OnAnalyzeListener<AnalyzeResult<T>> listener);
 
+    void analyze(@NonNull Uri uri, @NonNull OnAnalyzeListener<AnalyzeResult<T>> listener);
 
-    public interface OnAnalyzeListener<T>{
+    interface OnAnalyzeListener<T> {
         void onSuccess(@NonNull T result);
+
         void onFailure();
     }
+
 }

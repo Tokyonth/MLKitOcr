@@ -15,7 +15,10 @@
  */
 package com.tokyonth.module_core;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.net.Uri;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -44,14 +47,16 @@ import com.tokyonth.module_core.analyze.Analyzer;
 import com.tokyonth.module_core.config.CameraConfig;
 import com.tokyonth.module_core.manager.AmbientLightManager;
 import com.tokyonth.module_core.manager.BeepManager;
-import com.tokyonth.module_core.util.LogUtils;
 
 import java.util.concurrent.Executors;
 
 /**
  * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
  */
+@SuppressWarnings("rawtypes")
 public class BaseCameraScan<T> extends CameraScan<T> {
+
+    private static final String TAG = "BaseCameraScan";
 
     /**
      * Defines the maximum duration in milliseconds between a touch pad
@@ -67,10 +72,9 @@ public class BaseCameraScan<T> extends CameraScan<T> {
      */
     private static final int HOVER_TAP_SLOP = 20;
 
-    private FragmentActivity mFragmentActivity;
-    private Context mContext;
-    private LifecycleOwner mLifecycleOwner;
-    private PreviewView mPreviewView;
+    private final Context mContext;
+    private final LifecycleOwner mLifecycleOwner;
+    private final PreviewView mPreviewView;
 
     private ListenableFuture<ProcessCameraProvider> mCameraProviderFuture;
     private Camera mCamera;
@@ -103,27 +107,25 @@ public class BaseCameraScan<T> extends CameraScan<T> {
     private float mDownX;
     private float mDownY;
 
-    public BaseCameraScan(@NonNull FragmentActivity activity, @NonNull  PreviewView previewView){
-        this.mFragmentActivity = activity;
+    public BaseCameraScan(@NonNull FragmentActivity activity, @NonNull PreviewView previewView) {
         this.mLifecycleOwner = activity;
         this.mContext = activity;
         this.mPreviewView = previewView;
         initData();
     }
 
-    public BaseCameraScan(@NonNull Fragment fragment, @NonNull PreviewView previewView){
-        this.mFragmentActivity = fragment.getActivity();
+    public BaseCameraScan(@NonNull Fragment fragment, @NonNull PreviewView previewView) {
         this.mLifecycleOwner = fragment;
         this.mContext = fragment.getContext();
         this.mPreviewView = previewView;
         initData();
     }
 
-    private ScaleGestureDetector.OnScaleGestureListener mOnScaleGestureListener = new ScaleGestureDetector.SimpleOnScaleGestureListener(){
+    private final ScaleGestureDetector.OnScaleGestureListener mOnScaleGestureListener = new ScaleGestureDetector.SimpleOnScaleGestureListener() {
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
             float scale = detector.getScaleFactor();
-            if(mCamera != null){
+            if (mCamera != null) {
                 float ratio = mCamera.getCameraInfo().getZoomState().getValue().getZoomRatio();
                 zoomTo(ratio * scale);
                 return true;
@@ -133,13 +135,14 @@ public class BaseCameraScan<T> extends CameraScan<T> {
 
     };
 
-    private void initData(){
+    @SuppressLint("ClickableViewAccessibility")
+    private void initData() {
         mResultLiveData = new MutableLiveData<>();
         mResultLiveData.observe(mLifecycleOwner, result -> {
             isAnalyzeResult = false;
-            if(result != null){
+            if (result != null) {
                 handleAnalyzeResult(result);
-            }else if(mOnScanResultCallback != null){
+            } else if (mOnScanResultCallback != null) {
                 mOnScanResultCallback.onScanResultFailure();
             }
         });
@@ -160,7 +163,7 @@ public class BaseCameraScan<T> extends CameraScan<T> {
         ScaleGestureDetector scaleGestureDetector = new ScaleGestureDetector(mContext, mOnScaleGestureListener);
         mPreviewView.setOnTouchListener((v, event) -> {
             handlePreviewViewClickTap(event);
-            if(isNeedTouchZoom()){
+            if (isNeedTouchZoom()) {
                 return scaleGestureDetector.onTouchEvent(event);
             }
             return false;
@@ -169,28 +172,26 @@ public class BaseCameraScan<T> extends CameraScan<T> {
 
         mBeepManager = new BeepManager(mContext);
         mAmbientLightManager = new AmbientLightManager(mContext);
-        if(mAmbientLightManager != null){
-            mAmbientLightManager.register();
-            mAmbientLightManager.setOnLightSensorEventListener((dark, lightLux) -> {
-                if(flashlightView != null){
-                    if(dark){
-                        if(flashlightView.getVisibility() != View.VISIBLE){
-                            flashlightView.setVisibility(View.VISIBLE);
-                            flashlightView.setSelected(isTorchEnabled());
-                        }
-                    }else if(flashlightView.getVisibility() == View.VISIBLE && !isTorchEnabled()){
-                        flashlightView.setVisibility(View.INVISIBLE);
-                        flashlightView.setSelected(false);
+        mAmbientLightManager.register();
+        mAmbientLightManager.setOnLightSensorEventListener((dark, lightLux) -> {
+            if (flashlightView != null) {
+                if (dark) {
+                    if (flashlightView.getVisibility() != View.VISIBLE) {
+                        flashlightView.setVisibility(View.VISIBLE);
+                        flashlightView.setSelected(isTorchEnabled());
                     }
-
+                } else if (flashlightView.getVisibility() == View.VISIBLE && !isTorchEnabled()) {
+                    flashlightView.setVisibility(View.INVISIBLE);
+                    flashlightView.setSelected(false);
                 }
-            });
-        }
+
+            }
+        });
     }
 
-    private void handlePreviewViewClickTap(MotionEvent event){
-        if(event.getPointerCount() == 1){
-            switch (event.getAction()){
+    private void handlePreviewViewClickTap(MotionEvent event) {
+        if (event.getPointerCount() == 1) {
+            switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     isClickTap = true;
                     mDownX = event.getX();
@@ -198,11 +199,11 @@ public class BaseCameraScan<T> extends CameraScan<T> {
                     mLastHoveTapTime = System.currentTimeMillis();
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    isClickTap = distance(mDownX,mDownY,event.getX(),event.getY()) < HOVER_TAP_SLOP;
+                    isClickTap = distance(mDownX, mDownY, event.getX(), event.getY()) < HOVER_TAP_SLOP;
                     break;
                 case MotionEvent.ACTION_UP:
-                    if(isClickTap && mLastHoveTapTime + HOVER_TAP_TIMEOUT > System.currentTimeMillis()){
-                        startFocusAndMetering(event.getX(),event.getY());
+                    if (isClickTap && mLastHoveTapTime + HOVER_TAP_TIMEOUT > System.currentTimeMillis()) {
+                        startFocusAndMetering(event.getX(), event.getY());
                     }
                     break;
             }
@@ -215,35 +216,35 @@ public class BaseCameraScan<T> extends CameraScan<T> {
         return (float) Math.sqrt(xDiff * xDiff + yDiff * yDiff);
     }
 
-    private void startFocusAndMetering(float x, float y){
-        if(mCamera != null){
-            LogUtils.d("startFocusAndMetering:" + x + "," + y);
-            MeteringPoint point = mPreviewView.getMeteringPointFactory().createPoint(x,y);
+    private void startFocusAndMetering(float x, float y) {
+        if (mCamera != null) {
+            Log.d(TAG, "startFocusAndMetering:" + x + "," + y);
+            MeteringPoint point = mPreviewView.getMeteringPointFactory().createPoint(x, y);
             mCamera.getCameraControl().startFocusAndMetering(new FocusMeteringAction.Builder(point).build());
         }
     }
 
-    private void initConfig(){
-        if(mCameraConfig == null){
+    private void initConfig() {
+        if (mCameraConfig == null) {
             mCameraConfig = new CameraConfig();
         }
     }
 
     @Override
     public CameraScan setCameraConfig(CameraConfig cameraConfig) {
-        if(cameraConfig != null){
+        if (cameraConfig != null) {
             this.mCameraConfig = cameraConfig;
         }
         return this;
     }
 
     @Override
-    public void startCamera(){
+    public void startCamera() {
         initConfig();
         mCameraProviderFuture = ProcessCameraProvider.getInstance(mContext);
         mCameraProviderFuture.addListener(() -> {
 
-            try{
+            try {
                 Preview preview = mCameraConfig.options(new Preview.Builder());
 
                 //相机选择器
@@ -255,19 +256,19 @@ public class BaseCameraScan<T> extends CameraScan<T> {
                 ImageAnalysis imageAnalysis = mCameraConfig.options(new ImageAnalysis.Builder()
                         .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST));
                 imageAnalysis.setAnalyzer(Executors.newSingleThreadExecutor(), image -> {
-                    if(isAnalyze && !isAnalyzeResult && mAnalyzer != null){
+                    if (isAnalyze && !isAnalyzeResult && mAnalyzer != null) {
                         isAnalyzeResult = true;
-                        mAnalyzer.analyze(image,mOnAnalyzeListener);
+                        mAnalyzer.analyze(image, mOnAnalyzeListener);
                     }
                     image.close();
                 });
-                if(mCamera != null){
+                if (mCamera != null) {
                     mCameraProviderFuture.get().unbindAll();
                 }
                 //绑定到生命周期
                 mCamera = mCameraProviderFuture.get().bindToLifecycle(mLifecycleOwner, cameraSelector, preview, imageAnalysis);
-            }catch (Exception e){
-                LogUtils.e(e);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
         }, ContextCompat.getMainExecutor(mContext));
@@ -275,31 +276,32 @@ public class BaseCameraScan<T> extends CameraScan<T> {
 
     /**
      * 处理分析结果
+     *
      * @param result
      */
-    private synchronized void handleAnalyzeResult(AnalyzeResult<T> result){
+    private synchronized void handleAnalyzeResult(AnalyzeResult<T> result) {
 
-        if(isAnalyzeResult || !isAnalyze){
+        if (isAnalyzeResult || !isAnalyze) {
             return;
         }
 
-        if(mBeepManager != null){
+        if (mBeepManager != null) {
             mBeepManager.playBeepSoundAndVibrate();
         }
 
-        if(mOnScanResultCallback != null){
+        if (mOnScanResultCallback != null) {
             mOnScanResultCallback.onScanResultCallback(result);
         }
     }
 
 
     @Override
-    public void stopCamera(){
-        if(mCameraProviderFuture != null){
+    public void stopCamera() {
+        if (mCameraProviderFuture != null) {
             try {
                 mCameraProviderFuture.get().unbindAll();
-            }catch (Exception e){
-                LogUtils.e(e);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
@@ -317,22 +319,22 @@ public class BaseCameraScan<T> extends CameraScan<T> {
     }
 
     @Override
-    public void zoomIn(){
-        if(mCamera != null){
+    public void zoomIn() {
+        if (mCamera != null) {
             float ratio = mCamera.getCameraInfo().getZoomState().getValue().getZoomRatio() + 0.1f;
             float maxRatio = mCamera.getCameraInfo().getZoomState().getValue().getMaxZoomRatio();
-            if(ratio <= maxRatio){
+            if (ratio <= maxRatio) {
                 mCamera.getCameraControl().setZoomRatio(ratio);
             }
         }
     }
 
     @Override
-    public void zoomOut(){
-        if(mCamera != null){
+    public void zoomOut() {
+        if (mCamera != null) {
             float ratio = mCamera.getCameraInfo().getZoomState().getValue().getZoomRatio() - 0.1f;
             float minRatio = mCamera.getCameraInfo().getZoomState().getValue().getMinZoomRatio();
-            if(ratio >= minRatio){
+            if (ratio >= minRatio) {
                 mCamera.getCameraControl().setZoomRatio(ratio);
             }
         }
@@ -341,20 +343,20 @@ public class BaseCameraScan<T> extends CameraScan<T> {
 
     @Override
     public void zoomTo(float ratio) {
-        if(mCamera != null){
+        if (mCamera != null) {
             ZoomState zoomState = mCamera.getCameraInfo().getZoomState().getValue();
             float maxRatio = zoomState.getMaxZoomRatio();
             float minRatio = zoomState.getMinZoomRatio();
-            float zoom = Math.max(Math.min(ratio,maxRatio),minRatio);
+            float zoom = Math.max(Math.min(ratio, maxRatio), minRatio);
             mCamera.getCameraControl().setZoomRatio(zoom);
         }
     }
 
     @Override
     public void lineZoomIn() {
-        if(mCamera != null){
+        if (mCamera != null) {
             float zoom = mCamera.getCameraInfo().getZoomState().getValue().getLinearZoom() + 0.1f;
-            if(zoom <= 1f){
+            if (zoom <= 1f) {
                 mCamera.getCameraControl().setLinearZoom(zoom);
             }
         }
@@ -362,31 +364,31 @@ public class BaseCameraScan<T> extends CameraScan<T> {
 
     @Override
     public void lineZoomOut() {
-        if(mCamera != null){
+        if (mCamera != null) {
             float zoom = mCamera.getCameraInfo().getZoomState().getValue().getLinearZoom() - 0.1f;
-            if(zoom >= 0f){
+            if (zoom >= 0f) {
                 mCamera.getCameraControl().setLinearZoom(zoom);
             }
         }
     }
 
     @Override
-    public void lineZoomTo(@FloatRange(from = 0.0,to = 1.0) float linearZoom) {
-        if(mCamera != null){
+    public void lineZoomTo(@FloatRange(from = 0.0, to = 1.0) float linearZoom) {
+        if (mCamera != null) {
             mCamera.getCameraControl().setLinearZoom(linearZoom);
         }
     }
 
     @Override
     public void enableTorch(boolean torch) {
-        if(mCamera != null && hasFlashUnit()){
+        if (mCamera != null && hasFlashUnit()) {
             mCamera.getCameraControl().enableTorch(torch);
         }
     }
 
     @Override
     public boolean isTorchEnabled() {
-        if(mCamera != null){
+        if (mCamera != null) {
             return mCamera.getCameraInfo().getTorchState().getValue() == TorchState.ON;
         }
         return false;
@@ -394,11 +396,12 @@ public class BaseCameraScan<T> extends CameraScan<T> {
 
     /**
      * 是否支持闪光灯
+     *
      * @return
      */
     @Override
-    public boolean hasFlashUnit(){
-        if(mCamera != null){
+    public boolean hasFlashUnit() {
+        if (mCamera != null) {
             return mCamera.getCameraInfo().hasFlashUnit();
         }
         return false;
@@ -406,7 +409,7 @@ public class BaseCameraScan<T> extends CameraScan<T> {
 
     @Override
     public CameraScan setVibrate(boolean vibrate) {
-        if(mBeepManager != null){
+        if (mBeepManager != null) {
             mBeepManager.setVibrate(vibrate);
         }
         return this;
@@ -414,7 +417,7 @@ public class BaseCameraScan<T> extends CameraScan<T> {
 
     @Override
     public CameraScan setPlayBeep(boolean playBeep) {
-        if(mBeepManager != null){
+        if (mBeepManager != null) {
             mBeepManager.setPlayBeep(playBeep);
         }
         return this;
@@ -428,7 +431,7 @@ public class BaseCameraScan<T> extends CameraScan<T> {
 
     @Nullable
     @Override
-    public Camera getCamera(){
+    public Camera getCamera() {
         return mCamera;
     }
 
@@ -437,10 +440,10 @@ public class BaseCameraScan<T> extends CameraScan<T> {
     public void release() {
         isAnalyze = false;
         flashlightView = null;
-        if(mAmbientLightManager != null){
+        if (mAmbientLightManager != null) {
             mAmbientLightManager.unregister();
         }
-        if(mBeepManager != null){
+        if (mBeepManager != null) {
             mBeepManager.close();
         }
         stopCamera();
@@ -449,23 +452,29 @@ public class BaseCameraScan<T> extends CameraScan<T> {
     @Override
     public CameraScan bindFlashlightView(@Nullable View v) {
         flashlightView = v;
-        if(mAmbientLightManager != null){
+        if (mAmbientLightManager != null) {
             mAmbientLightManager.setLightSensorEnabled(v != null);
         }
         return this;
     }
 
-    public CameraScan setDarkLightLux(float lightLux){
-        if(mAmbientLightManager != null){
+    public CameraScan setDarkLightLux(float lightLux) {
+        if (mAmbientLightManager != null) {
             mAmbientLightManager.setDarkLightLux(lightLux);
         }
         return this;
     }
 
-    public CameraScan setBrightLightLux(float lightLux){
-        if(mAmbientLightManager != null){
+    public CameraScan setBrightLightLux(float lightLux) {
+        if (mAmbientLightManager != null) {
             mAmbientLightManager.setBrightLightLux(lightLux);
         }
+        return this;
+    }
+
+    @Override
+    public CameraScan parseImage(Uri uri) {
+        mAnalyzer.analyze(uri, mOnAnalyzeListener);
         return this;
     }
 

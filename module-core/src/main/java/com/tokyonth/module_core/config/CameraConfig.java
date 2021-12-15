@@ -25,26 +25,27 @@ import androidx.camera.core.Preview;
  * 你也可以直接使用内置定义的相机配置
  * {@link AspectRatioCameraConfig}
  * {@link ResolutionCameraConfig}
+ *
  * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
  */
 public class CameraConfig {
 
-    public CameraConfig(){
+    public CameraConfig() {
 
     }
 
     @NonNull
-    public Preview options(@NonNull Preview.Builder builder){
+    public Preview options(@NonNull Preview.Builder builder) {
         return builder.build();
     }
 
     @NonNull
-    public CameraSelector options(@NonNull CameraSelector.Builder builder){
+    public CameraSelector options(@NonNull CameraSelector.Builder builder) {
         return builder.build();
     }
 
     @NonNull
-    public ImageAnalysis options(@NonNull ImageAnalysis.Builder builder){
+    public ImageAnalysis options(@NonNull ImageAnalysis.Builder builder) {
         return builder.build();
     }
 

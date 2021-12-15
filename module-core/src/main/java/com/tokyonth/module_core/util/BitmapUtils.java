@@ -12,6 +12,7 @@ import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -24,16 +25,18 @@ import androidx.camera.core.ImageProxy;
 
 public class BitmapUtils {
 
-    /** Converts NV21 format byte buffer to bitmap. */
+    /**
+     * Converts NV21 format byte buffer to bitmap.
+     */
     @Nullable
-    public static Bitmap getBitmap(ByteBuffer data, int width, int height,int rotationDegrees) {
+    public static Bitmap getBitmap(ByteBuffer data, int width, int height, int rotationDegrees) {
         data.rewind();
         byte[] imageInBuffer = new byte[data.limit()];
         data.get(imageInBuffer, 0, imageInBuffer.length);
         try {
             YuvImage image =
                     new YuvImage(
-                            imageInBuffer, ImageFormat.NV21,width,height, null);
+                            imageInBuffer, ImageFormat.NV21, width, height, null);
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             image.compressToJpeg(new Rect(0, 0, width, height), 80, stream);
 
@@ -42,21 +45,24 @@ public class BitmapUtils {
             stream.close();
             return rotateBitmap(bmp, rotationDegrees, false, false);
         } catch (Exception e) {
-            LogUtils.e( "Error: " + e.getMessage());
+            e.printStackTrace();
         }
         return null;
     }
 
-    /** Converts a YUV_420_888 image from CameraX API to a bitmap. */
+    /**
+     * Converts a YUV_420_888 image from CameraX API to a bitmap.
+     */
     @Nullable
     public static Bitmap getBitmap(ImageProxy image) {
-
         ByteBuffer nv21Buffer =
                 yuv420ThreePlanesToNV21(image.getImage().getPlanes(), image.getWidth(), image.getHeight());
         return getBitmap(nv21Buffer, image.getWidth(), image.getHeight(), image.getImageInfo().getRotationDegrees());
     }
 
-    /** Rotates a bitmap if it is converted from a bytebuffer. */
+    /**
+     * Rotates a bitmap if it is converted from a bytebuffer.
+     */
     private static Bitmap rotateBitmap(
             Bitmap bitmap, int rotationDegrees, boolean flipX, boolean flipY) {
         Matrix matrix = new Matrix();
@@ -142,7 +148,7 @@ public class BitmapUtils {
 
             exif = new ExifInterface(inputStream);
         } catch (IOException e) {
-            LogUtils.e("failed to open file to read rotation meta data: " + imageUri, e);
+            Log.e(BitmapUtils.class.getSimpleName(), "failed to open file to read rotation meta data: " + imageUri + e);
             return 0;
         }
 
@@ -193,7 +199,9 @@ public class BitmapUtils {
         return ByteBuffer.wrap(out);
     }
 
-    /** Checks if the UV plane buffers of a YUV_420_888 image are in the NV21 format. */
+    /**
+     * Checks if the UV plane buffers of a YUV_420_888 image are in the NV21 format.
+     */
     private static boolean areUVPlanesNV21(Image.Plane[] planes, int width, int height) {
         int imageSize = width * height;
 
@@ -253,4 +261,5 @@ public class BitmapUtils {
             rowStart += plane.getRowStride();
         }
     }
+
 }

@@ -24,15 +24,14 @@ import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.Preview;
 
-import com.tokyonth.module_core.util.LogUtils;
-
 /**
  * 相机配置：根据纵横比配置相机，使输出分析的图像尽可能的接近屏幕比例
+ *
  * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
  */
 public final class AspectRatioCameraConfig extends CameraConfig {
 
-    private int mAspectRatio;
+    private final int mAspectRatio;
 
     public AspectRatioCameraConfig(Context context) {
         super();
@@ -42,11 +41,9 @@ public final class AspectRatioCameraConfig extends CameraConfig {
         int height = displayMetrics.heightPixels;
 
         mAspectRatio = aspectRatio(width, height);
-        LogUtils.d("aspectRatio:" + mAspectRatio);
-
     }
 
-    private int aspectRatio(float width, float height){
+    private int aspectRatio(float width, float height) {
         float ratio = Math.max(width, height) / Math.min(width, height);
         if (Math.abs(ratio - 4.0f / 3.0f) < Math.abs(ratio - 16.0f / 9.0f)) {
             return AspectRatio.RATIO_4_3;
@@ -72,4 +69,5 @@ public final class AspectRatioCameraConfig extends CameraConfig {
         builder.setTargetAspectRatio(mAspectRatio);
         return super.options(builder);
     }
+
 }

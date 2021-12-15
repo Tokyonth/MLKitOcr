@@ -16,6 +16,7 @@
 package com.tokyonth.module_core;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -155,5 +156,7 @@ public abstract class CameraScan<T> implements ICamera, ICameraControl {
         }
         return null;
     }
+
+    public abstract CameraScan parseImage(Uri uri);
 
 }

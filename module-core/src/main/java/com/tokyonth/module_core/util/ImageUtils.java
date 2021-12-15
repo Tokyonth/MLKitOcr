@@ -32,15 +32,15 @@ import java.nio.ByteBuffer;
  */
 public class ImageUtils {
 
-    private ImageUtils(){
+    private ImageUtils() {
         throw new AssertionError();
     }
 
-    public static Bitmap imageProxyToBitmap(ImageProxy imageProxy) throws Exception{
+    public static Bitmap imageProxyToBitmap(ImageProxy imageProxy) throws Exception {
         return imageProxyToBitmap(imageProxy, imageProxy.getImageInfo().getRotationDegrees());
     }
 
-    public static Bitmap imageProxyToBitmap(ImageProxy imageProxy,int rotationDegrees) throws Exception{
+    public static Bitmap imageProxyToBitmap(ImageProxy imageProxy, int rotationDegrees) throws Exception {
         ImageProxy.PlaneProxy[] plane = imageProxy.getPlanes();
         ByteBuffer yBuffer = plane[0].getBuffer();  // Y
         ByteBuffer uBuffer = plane[1].getBuffer();  // U
@@ -62,12 +62,13 @@ public class ImageUtils {
         yuvImage.compressToJpeg(new Rect(0, 0, yuvImage.getWidth(), yuvImage.getHeight()), 90, stream);
 
         Bitmap bitmap = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size());
-        if(rotationDegrees != 0){
+        if (rotationDegrees != 0) {
             Matrix matrix = new Matrix();
             matrix.postRotate(rotationDegrees);
-            bitmap = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(), matrix, true);
+            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
         }
 
         return bitmap;
     }
+
 }

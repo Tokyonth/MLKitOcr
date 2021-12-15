@@ -27,6 +27,7 @@ public class AnalyzeResult<T> {
     private T result;
 
     public AnalyzeResult() {
+
     }
 
     public AnalyzeResult(Bitmap bitmap, T result) {
