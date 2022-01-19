@@ -119,8 +119,8 @@ public class PermissionUtils {
     public static boolean requestPermissionsResult(@NonNull String[] requestPermissions, @NonNull String[] permissions, @NonNull int[] grantResults) {
         int length = permissions.length;
         for (int i = 0; i < length; i++) {
-            for (int j = 0; j < requestPermissions.length; j++) {
-                if (requestPermissions[j].equals(permissions[i])) {
+            for (String requestPermission : requestPermissions) {
+                if (requestPermission.equals(permissions[i])) {
                     if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                         return false;
                     }

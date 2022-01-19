@@ -15,7 +15,7 @@
         android:id="@+id/tv_ocr_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="对准文字后, 轻触屏幕开始识别"
+        android:text="对准文字后, 轻触本文字开始识别"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,10 +24,12 @@
 
     <ImageView
         android:id="@+id/iv_form_image"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_margin="32dp"
-        android:src="@mipmap/ic_launcher"
+        android:background="@drawable/bg_round_alpha20"
+        android:padding="8dp"
+        android:src="@drawable/ic_album"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:ignore="ContentDescription" />

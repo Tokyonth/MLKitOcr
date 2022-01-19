@@ -23,6 +23,9 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.camera.core.ImageProxy;
 
+/**
+ * Modify 2021.12.30 by Tokyonth
+ */
 public class BitmapUtils {
 
     /**
@@ -82,7 +85,6 @@ public class BitmapUtils {
         return rotatedBitmap;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Nullable
     public static Bitmap getBitmapFromContentUri(ContentResolver contentResolver, Uri imageUri)
             throws IOException {
@@ -90,7 +92,11 @@ public class BitmapUtils {
         if (decodedBitmap == null) {
             return null;
         }
-        int orientation = getExifOrientationTag(contentResolver, imageUri);
+
+        int orientation = -1;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            orientation = getExifOrientationTag(contentResolver, imageUri);
+        }
 
         int rotationDegrees = 0;
         boolean flipX = false;
@@ -126,7 +132,6 @@ public class BitmapUtils {
             default:
                 // No transformations necessary in this case.
         }
-
         return rotateBitmap(decodedBitmap, rotationDegrees, flipX, flipY);
     }
 

@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -14,6 +15,15 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [
+                        "room.schemaLocation"  : "$projectDir/schemas".toString(),
+                        "room.incremental"     : "true",
+                        "room.expandProjection": "true"]
+            }
+        }
     }
 
     buildTypes {
@@ -29,13 +39,32 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
+    //noinspection GradleDependency
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     api 'androidx.core:core-ktx:1.7.0'
     api 'androidx.appcompat:appcompat:1.4.0'
     api 'com.google.android.material:material:1.4.0'
+
+    def lifecycleVersion = '2.4.0'
+    api 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    api "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
+    api "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
+    api "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
+    api "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
+    api 'androidx.fragment:fragment-ktx:1.4.0'
+    api 'androidx.activity:activity-ktx:1.4.0'
+
+    def roomVersion = '2.4.0'
+    kapt "androidx.room:room-compiler:$roomVersion"
+    api "androidx.room:room-runtime:$roomVersion"
+    api "androidx.room:room-ktx:$roomVersion"
+
     //noinspection GradleDynamicVersion
     testApi 'junit:junit:4.+'
     androidTestApi 'androidx.test.ext:junit:1.1.3'

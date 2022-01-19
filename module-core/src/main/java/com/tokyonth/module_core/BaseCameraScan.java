@@ -52,6 +52,7 @@ import java.util.concurrent.Executors;
 
 /**
  * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
+ * Modify 2021.12.30 by Tokyonth
  */
 @SuppressWarnings("rawtypes")
 public class BaseCameraScan<T> extends CameraScan<T> {
@@ -231,7 +232,7 @@ public class BaseCameraScan<T> extends CameraScan<T> {
     }
 
     @Override
-    public CameraScan setCameraConfig(CameraConfig cameraConfig) {
+    public CameraScan<T> setCameraConfig(CameraConfig cameraConfig) {
         if (cameraConfig != null) {
             this.mCameraConfig = cameraConfig;
         }
@@ -276,11 +277,8 @@ public class BaseCameraScan<T> extends CameraScan<T> {
 
     /**
      * 处理分析结果
-     *
-     * @param result
      */
     private synchronized void handleAnalyzeResult(AnalyzeResult<T> result) {
-
         if (isAnalyzeResult || !isAnalyze) {
             return;
         }
@@ -294,7 +292,6 @@ public class BaseCameraScan<T> extends CameraScan<T> {
         }
     }
 
-
     @Override
     public void stopCamera() {
         if (mCameraProviderFuture != null) {
@@ -307,13 +304,13 @@ public class BaseCameraScan<T> extends CameraScan<T> {
     }
 
     @Override
-    public CameraScan setAnalyzeImage(boolean analyze) {
+    public CameraScan<T> setAnalyzeImage(boolean analyze) {
         isAnalyze = analyze;
         return this;
     }
 
     @Override
-    public CameraScan setAnalyzer(Analyzer<T> analyzer) {
+    public CameraScan<T> setAnalyzer(Analyzer<T> analyzer) {
         mAnalyzer = analyzer;
         return this;
     }
@@ -339,7 +336,6 @@ public class BaseCameraScan<T> extends CameraScan<T> {
             }
         }
     }
-
 
     @Override
     public void zoomTo(float ratio) {
@@ -396,8 +392,6 @@ public class BaseCameraScan<T> extends CameraScan<T> {
 
     /**
      * 是否支持闪光灯
-     *
-     * @return
      */
     @Override
     public boolean hasFlashUnit() {
@@ -408,7 +402,7 @@ public class BaseCameraScan<T> extends CameraScan<T> {
     }
 
     @Override
-    public CameraScan setVibrate(boolean vibrate) {
+    public CameraScan<T> setVibrate(boolean vibrate) {
         if (mBeepManager != null) {
             mBeepManager.setVibrate(vibrate);
         }
@@ -416,7 +410,7 @@ public class BaseCameraScan<T> extends CameraScan<T> {
     }
 
     @Override
-    public CameraScan setPlayBeep(boolean playBeep) {
+    public CameraScan<T> setPlayBeep(boolean playBeep) {
         if (mBeepManager != null) {
             mBeepManager.setPlayBeep(playBeep);
         }
@@ -424,7 +418,7 @@ public class BaseCameraScan<T> extends CameraScan<T> {
     }
 
     @Override
-    public CameraScan setOnScanResultCallback(OnScanResultCallback callback) {
+    public CameraScan<T> setOnScanResultCallback(OnScanResultCallback callback) {
         this.mOnScanResultCallback = callback;
         return this;
     }
@@ -434,7 +428,6 @@ public class BaseCameraScan<T> extends CameraScan<T> {
     public Camera getCamera() {
         return mCamera;
     }
-
 
     @Override
     public void release() {
@@ -450,7 +443,7 @@ public class BaseCameraScan<T> extends CameraScan<T> {
     }
 
     @Override
-    public CameraScan bindFlashlightView(@Nullable View v) {
+    public CameraScan<T> bindFlashlightView(@Nullable View v) {
         flashlightView = v;
         if (mAmbientLightManager != null) {
             mAmbientLightManager.setLightSensorEnabled(v != null);
@@ -458,14 +451,14 @@ public class BaseCameraScan<T> extends CameraScan<T> {
         return this;
     }
 
-    public CameraScan setDarkLightLux(float lightLux) {
+    public CameraScan<T> setDarkLightLux(float lightLux) {
         if (mAmbientLightManager != null) {
             mAmbientLightManager.setDarkLightLux(lightLux);
         }
         return this;
     }
 
-    public CameraScan setBrightLightLux(float lightLux) {
+    public CameraScan<T> setBrightLightLux(float lightLux) {
         if (mAmbientLightManager != null) {
             mAmbientLightManager.setBrightLightLux(lightLux);
         }
@@ -473,7 +466,7 @@ public class BaseCameraScan<T> extends CameraScan<T> {
     }
 
     @Override
-    public CameraScan parseImage(Uri uri) {
+    public CameraScan<T> parseImage(Uri uri) {
         mAnalyzer.analyze(uri, mOnAnalyzeListener);
         return this;
     }

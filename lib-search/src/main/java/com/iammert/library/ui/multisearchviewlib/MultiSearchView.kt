@@ -10,19 +10,7 @@ class MultiSearchView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) :
-    RelativeLayout(context, attrs, defStyleAttr) {
-
-    interface MultiSearchViewListener {
-
-        fun onTextChanged(index: Int, s: CharSequence)
-
-        fun onSearchComplete(index: Int, s: CharSequence)
-
-        fun onSearchItemRemoved(index: Int)
-
-        fun onItemSelected(index: Int, s: CharSequence)
-    }
+) : RelativeLayout(context, attrs, defStyleAttr) {
 
     private val binding: ViewMultiSearchBinding =
         ViewMultiSearchBinding.inflate(LayoutInflater.from(context), this, true)
@@ -53,4 +41,5 @@ class MultiSearchView @JvmOverloads constructor(
     fun setSearchViewListener(multiSearchViewListener: MultiSearchViewListener) {
         binding.searchViewContainer.setSearchViewListener(multiSearchViewListener)
     }
+
 }

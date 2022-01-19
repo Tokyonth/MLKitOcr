@@ -89,8 +89,6 @@ public class AmbientLightManager implements SensorEventListener {
 
     /**
      * 设置光线足够暗的阈值（单位：lux）
-     *
-     * @param lightLux
      */
     public void setDarkLightLux(float lightLux) {
         this.darkLightLux = lightLux;
@@ -98,8 +96,6 @@ public class AmbientLightManager implements SensorEventListener {
 
     /**
      * 设置光线足够明亮的阈值（单位：lux）
-     *
-     * @param lightLux
      */
     public void setBrightLightLux(float lightLux) {
         this.brightLightLux = lightLux;
@@ -116,8 +112,6 @@ public class AmbientLightManager implements SensorEventListener {
 
     /**
      * 设置是否启用光线亮度传感器
-     *
-     * @param lightSensorEnabled
      */
     public void setLightSensorEnabled(boolean lightSensorEnabled) {
         isLightSensorEnabled = lightSensorEnabled;
@@ -125,8 +119,6 @@ public class AmbientLightManager implements SensorEventListener {
 
     /**
      * 设置光线亮度传感器监听器，只有在 {@link #isLightSensorEnabled} 为{@code true} 才有效
-     *
-     * @param listener
      */
     public void setOnLightSensorEventListener(OnLightSensorEventListener listener) {
         mOnLightSensorEventListener = listener;

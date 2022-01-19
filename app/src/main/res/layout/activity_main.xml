@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="100dp"
-            android:text="Explore"
+            android:text="Recent"
             android:textColor="#000"
             android:textSize="32sp"
             android:textStyle="bold" />
@@ -32,16 +32,21 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             tools:itemCount="2"
             tools:listitem="@layout/item_ocr_recent" />
 
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="32dp"
+        android:src="@drawable/ic_camera"
+        app:backgroundTint="@android:color/white"
         tools:ignore="ContentDescription" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

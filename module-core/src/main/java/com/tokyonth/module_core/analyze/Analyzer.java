@@ -24,6 +24,7 @@ import com.tokyonth.module_core.AnalyzeResult;
 
 /**
  * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
+ * Modify 2021.12.30 by Tokyonth
  */
 public interface Analyzer<T> {
     /**

@@ -7,8 +7,6 @@ import com.tokyonth.module_core.analyze.Analyzer.OnAnalyzeListener
 import com.tokyonth.module_core.AnalyzeResult
 import android.graphics.Bitmap
 import com.tokyonth.module_core.util.BitmapUtils
-import androidx.annotation.RequiresApi
-import android.os.Build
 import android.net.Uri
 import java.io.IOException
 import com.google.mlkit.vision.common.InputImage
@@ -36,7 +34,6 @@ class TextRecognitionAnalyzer constructor(
         analyzeBitmap(BitmapUtils.getBitmap(imageProxy), listener)
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
     override fun analyze(
         uri: Uri, listener:
         OnAnalyzeListener<AnalyzeResult<Text?>>

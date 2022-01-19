@@ -1,12 +1,11 @@
 package com.tokyonth.mlkitocr.activity
 
-import android.graphics.Color
-import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.view.WindowCompat
+import androidx.activity.viewModels
 import com.google.mlkit.vision.text.Text
 import com.tokyonth.mlkitocr.databinding.ActivityAnalyzeBinding
+import com.tokyonth.mlkitocr.viewmodel.RecentDataViewModel
 import com.tokyonth.mlkitocr.widget.TextSheetDialog
 import com.tokyonth.module_core.AnalyzeResult
 import com.tokyonth.module_core.BaseCameraScanActivity
@@ -14,28 +13,18 @@ import com.tokyonth.module_core.analyze.Analyzer
 import com.tokyonth.module_ocr.TextRecognitionAnalyzer
 import com.tokyonth.module_ocr.factory.ChineseRecognizer
 
-class AnalyzeActivity : BaseCameraScanActivity<Text>() {
+class AnalyzeActivity : BaseCameraScanActivity<ActivityAnalyzeBinding, Text>() {
 
-    private lateinit var vb: ActivityAnalyzeBinding
+    private val viewModel: RecentDataViewModel by viewModels()
 
     private lateinit var textSheetDialog: TextSheetDialog
 
     private lateinit var resultPhotoLauncher: ActivityResultLauncher<String>
 
-    override fun setViewBinding() = vb
-
     override fun setPreviewView() = vb.previewView
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        WindowCompat.getInsetsController(window, window.decorView)?.apply {
-            isAppearanceLightStatusBars = false
-            window.statusBarColor = Color.TRANSPARENT
-            window.navigationBarColor = Color.TRANSPARENT
-        }
-        vb = ActivityAnalyzeBinding.inflate(layoutInflater)
-
-        super.onCreate(savedInstanceState)
+    override fun initData() {
+        super.initData()
         cameraScan.setAnalyzeImage(false)
 
         resultPhotoLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) {
@@ -56,10 +45,14 @@ class AnalyzeActivity : BaseCameraScanActivity<Text>() {
     }
 
     override fun onScanResultCallback(result: AnalyzeResult<Text>) {
+        val content = result.result.text
         textSheetDialog.apply {
-            setOcrText(result.result.text)
+            setOcrText(content)
         }.show()
         cameraScan.setAnalyzeImage(false)
+        if (content.isNotEmpty()) {
+            viewModel.insertData(content)
+        }
     }
 
     override fun createAnalyzer(): Analyzer<Text?> {

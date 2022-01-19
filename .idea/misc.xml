@@ -4,13 +4,22 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/AndroidProjects/MLKitOcr/app/src/main/res/drawable/bg_bottom_sheet.xml" value="0.38229166666666664" />
+        <entry key="..\:/AndroidProjects/MLKitOcr/app/src/main/res/drawable/bg_recent_item.xml" value="0.38229166666666664" />
         <entry key="..\:/AndroidProjects/MLKitOcr/app/src/main/res/drawable/bg_recrent_item.xml" value="0.38229166666666664" />
+        <entry key="..\:/AndroidProjects/MLKitOcr/app/src/main/res/drawable/bg_round.xml" value="0.38229166666666664" />
+        <entry key="..\:/AndroidProjects/MLKitOcr/app/src/main/res/drawable/bg_round_alpha20.xml" value="0.38229166666666664" />
+        <entry key="..\:/AndroidProjects/MLKitOcr/app/src/main/res/drawable/ic_album.xml" value="0.38229166666666664" />
+        <entry key="..\:/AndroidProjects/MLKitOcr/app/src/main/res/drawable/ic_camera.xml" value="0.22083333333333333" />
+        <entry key="..\:/AndroidProjects/MLKitOcr/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.22083333333333333" />
         <entry key="..\:/AndroidProjects/MLKitOcr/app/src/main/res/drawable/tag_dialog_ocr_round.xml" value="0.38229166666666664" />
         <entry key="..\:/AndroidProjects/MLKitOcr/app/src/main/res/layout/activity_analyze.xml" value="0.2694746376811594" />
         <entry key="..\:/AndroidProjects/MLKitOcr/app/src/main/res/layout/activity_main.xml" value="0.21467391304347827" />
+        <entry key="..\:/AndroidProjects/MLKitOcr/app/src/main/res/layout/activity_splash.xml" value="0.2694746376811594" />
         <entry key="..\:/AndroidProjects/MLKitOcr/app/src/main/res/layout/item_ocr_recent.xml" value="0.2694746376811594" />
         <entry key="..\:/AndroidProjects/MLKitOcr/app/src/main/res/layout/item_recent.xml" value="0.2694746376811594" />
         <entry key="..\:/AndroidProjects/MLKitOcr/app/src/main/res/layout/layout_text_sheet_dialog.xml" value="0.28306159420289856" />
+        <entry key="..\:/AndroidProjects/MLKitOcr/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.38229166666666664" />
+        <entry key="..\:/AndroidProjects/MLKitOcr/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.38229166666666664" />
         <entry key="..\:/AndroidProjects/MLKitOcr/lib-search/src/main/res/drawable/ic_round_clear_24px.xml" value="0.38229166666666664" />
         <entry key="..\:/AndroidProjects/MLKitOcr/lib-search/src/main/res/drawable/ic_round_search_24px.xml" value="0.38229166666666664" />
         <entry key="..\:/AndroidProjects/MLKitOcr/lib-search/src/main/res/drawable/indicator_line.xml" value="0.38229166666666664" />

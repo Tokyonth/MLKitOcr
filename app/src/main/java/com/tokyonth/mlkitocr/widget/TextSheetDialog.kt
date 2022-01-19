@@ -14,6 +14,7 @@ class TextSheetDialog(context: Context) : BottomSheetDialog(context, R.style.Bot
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(vb.root)
+        vb.tvOcrText.setTextIsSelectable(true)
     }
 
     fun setOcrText(text: String) {

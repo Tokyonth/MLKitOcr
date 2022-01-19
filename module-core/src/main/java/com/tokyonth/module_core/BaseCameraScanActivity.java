@@ -1,51 +1,45 @@
 package com.tokyonth.module_core;
 
 import android.Manifest;
-import android.net.Uri;
-import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.view.PreviewView;
 import androidx.viewbinding.ViewBinding;
 
+import com.tokyonth.module_common.base.BaseActivity;
 import com.tokyonth.module_core.analyze.Analyzer;
 import com.tokyonth.module_core.util.PermissionUtils;
 
-public abstract class BaseCameraScanActivity<T> extends AppCompatActivity implements CameraScan.OnScanResultCallback<T> {
+public abstract class BaseCameraScanActivity<VB extends ViewBinding, T>
+        extends BaseActivity<VB> implements CameraScan.OnScanResultCallback<T> {
 
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 0x996;
 
-    protected PreviewView previewView;
-    private CameraScan<T> mCameraScan;
-
-    protected abstract ViewBinding setViewBinding();
-
     protected abstract PreviewView setPreviewView();
 
+    private CameraScan<T> mCameraScan;
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(setViewBinding().getRoot());
-        initView();
+    public boolean isLightStatusBar() {
+        return false;
     }
 
-    public void initView() {
-        previewView = setPreviewView();
-
+    @Override
+    public void initData() {
         initCameraScan();
         startCamera();
     }
 
-    public void initCameraScan() {
-        mCameraScan = createCameraScan(previewView)
-                .setAnalyzer(createAnalyzer())
-                .setOnScanResultCallback(this);
+    @Override
+    public void initView() {
+
     }
 
-    public void parseImage(Uri uri) {
-        mCameraScan.parseImage(uri);
+    public void initCameraScan() {
+        mCameraScan = createCameraScan(setPreviewView())
+                .setAnalyzer(createAnalyzer())
+                .setOnScanResultCallback(this);
     }
 
     public void startCamera() {

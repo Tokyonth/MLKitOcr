@@ -23,6 +23,13 @@ class MultiSearchContainerView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
+    companion object {
+
+        private const val WIDTH_RATIO = 0.85f
+        private const val DEFAULT_ANIM_DURATION = 500L
+
+    }
+
     var searchTextStyle = 0
 
     private var searchViewWidth: Float = 0f
@@ -42,7 +49,7 @@ class MultiSearchContainerView @JvmOverloads constructor(
 
     private var selectedTab: ViewItemBinding? = null
 
-    private var multiSearchViewListener: MultiSearchView.MultiSearchViewListener? = null
+    private var multiSearchViewListener: MultiSearchViewListener? = null
 
     private val searchEnterScrollAnimation = ValueAnimator.ofInt()
         .apply {
@@ -108,7 +115,7 @@ class MultiSearchContainerView @JvmOverloads constructor(
         searchViewWidth = viewWidth * WIDTH_RATIO
     }
 
-    fun setSearchViewListener(multiSearchViewListener: MultiSearchView.MultiSearchViewListener) {
+    fun setSearchViewListener(multiSearchViewListener: MultiSearchViewListener) {
         this.multiSearchViewListener = multiSearchViewListener
     }
 
@@ -194,7 +201,8 @@ class MultiSearchContainerView @JvmOverloads constructor(
     fun isInSearchMode() = isInSearchMode
 
     private fun createNewSearchView(): ViewItemBinding {
-        val viewItem: ViewItemBinding = ViewItemBinding.inflate(LayoutInflater.from(context), null, false)
+        val viewItem: ViewItemBinding =
+            ViewItemBinding.inflate(LayoutInflater.from(context), null, false)
 
         viewItem.editTextSearch.setStyle(context, searchTextStyle)
 
@@ -268,7 +276,7 @@ class MultiSearchContainerView @JvmOverloads constructor(
             removeIndex == currentChildCount - 1 -> {
                 val newSelectedView = binding.layoutItemContainer.getChildAt(removeIndex - 1)
                 val newSelectedViewBinding = ViewItemBinding.bind(newSelectedView)
-                  //  DataBindingUtil.bind<ViewItemBinding>(newSelectedView)
+                //  DataBindingUtil.bind<ViewItemBinding>(newSelectedView)
                 selectTab(newSelectedViewBinding)
                 binding.layoutItemContainer.removeView(viewItemBinding.root)
                 selectedTab = newSelectedViewBinding
@@ -276,7 +284,7 @@ class MultiSearchContainerView @JvmOverloads constructor(
             else -> {
                 val newSelectedTabView = binding.layoutItemContainer.getChildAt(removeIndex + 1)
                 val newSelectedViewBinding = ViewItemBinding.bind(newSelectedTabView)
-                   // DataBindingUtil.bind<ViewItemBinding>(newSelectedTabView)
+                // DataBindingUtil.bind<ViewItemBinding>(newSelectedTabView)
                 selectTab(newSelectedViewBinding)
                 binding.layoutItemContainer.removeView(viewItemBinding.root)
                 selectedTab = newSelectedViewBinding
@@ -309,9 +317,4 @@ class MultiSearchContainerView @JvmOverloads constructor(
         selectedTab?.let { selectTab(it) }
     }
 
-    companion object {
-
-        private const val WIDTH_RATIO = 0.85f
-        private const val DEFAULT_ANIM_DURATION = 500L
-    }
 }
